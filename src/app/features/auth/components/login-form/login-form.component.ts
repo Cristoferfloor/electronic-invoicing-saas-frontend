@@ -19,7 +19,7 @@ export class LoginFormComponent {
     showPassword = false;
 
     loginForm: FormGroup = this.fb.group({
-        email: ['', [Validators.required]], // RUC o Usuario
+        email: ['', [Validators.required, Validators.minLength(3)]],
         password: ['', [Validators.required]]
     });
 

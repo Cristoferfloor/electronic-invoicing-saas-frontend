@@ -27,7 +27,13 @@ export class AuthComponent {
                 this.router.navigate(['/dashboard']);
             },
             error: (err) => {
-                this.error = err.message || 'Error al iniciar sesión';
+                if (err.error && Array.isArray(err.error)) {
+                    this.error = 'Errores: ' + err.error.map((e: any) => `${e.field}: ${e.message}`).join(', ');
+                } else if (err.message) {
+                    this.error = err.message;
+                } else {
+                    this.error = 'Error al iniciar sesión';
+                }
                 this.loading = false;
             }
         });

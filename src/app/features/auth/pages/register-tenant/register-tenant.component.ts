@@ -27,8 +27,14 @@ export class RegisterTenantComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.error = err.message || 'Error al registrar empresa';
+        // Si el servidor envía detalles de validación, los mostramos
+        if (err.errors && Array.isArray(err.errors)) {
+          this.error = 'Errores de validación: ' + err.errors.map((e: any) => `${e.field}: ${e.message}`).join(', ');
+        } else {
+          this.error = err.message || 'Error al registrar empresa';
+        }
         this.loading = false;
+        console.error('Error de registro:', err);
       }
     });
   }

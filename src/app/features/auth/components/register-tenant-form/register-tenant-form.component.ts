@@ -29,7 +29,11 @@ export class RegisterTenantFormComponent {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         adminEmail: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(8)]]
+        password: ['', [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).*$/) // Al menos una mayúscula y un número
+        ]]
     });
 
     onFileSelected(event: any) {

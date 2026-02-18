@@ -3,12 +3,12 @@ import { Routes } from '@angular/router';
 export const AUTH_ROUTES: Routes = [
     {
         path: '',
-        loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
+        redirectTo: 'login',
+        pathMatch: 'full'
     },
     {
         path: 'login',
-        redirectTo: '',
-        pathMatch: 'full'
+        loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
     },
     {
         path: 'register-tenant',
@@ -17,9 +17,5 @@ export const AUTH_ROUTES: Routes = [
     {
         path: 'forgot-password',
         loadComponent: () => import('./pages/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
-    },
-    {
-        path: 'reset-password',
-        loadComponent: () => import('./pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
     }
 ];

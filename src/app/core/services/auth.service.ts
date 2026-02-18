@@ -34,13 +34,15 @@ export class AuthService {
     private checkInitialAuth(): void {
         if (this.tokenService.hasToken()) {
             this.isAuthenticatedSubject.next(true);
-            // Opcionalmente cargar el perfil si no está en el token
-            // this.getUserProfile().subscribe();
+            this.getUserProfile().subscribe({
+                error: () => this.clearLocalSession()
+            });
         }
     }
 
     login(credentials: LoginRequest): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials).pipe(
+        return this.http.post<any>(`${this.API_URL}/login`, credentials).pipe(
+            map(response => response.data as AuthResponse),
             tap(response => {
                 this.tokenService.saveTokens(response.accessToken, response.refreshToken);
                 this.currentUserSubject.next(response.user);
@@ -51,7 +53,8 @@ export class AuthService {
     }
 
     registerTenant(data: RegisterTenantRequest): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.API_URL}/register-tenant`, data).pipe(
+        return this.http.post<any>(`${this.API_URL}/register-tenant`, data).pipe(
+            map(response => response.data as AuthResponse),
             tap(response => {
                 this.tokenService.saveTokens(response.accessToken, response.refreshToken);
                 this.currentUserSubject.next(response.user);
@@ -85,7 +88,8 @@ export class AuthService {
             return throwError(() => new Error('No refresh token'));
         }
 
-        return this.http.post<AuthResponse>(`${this.API_URL}/refresh`, { refreshToken }).pipe(
+        return this.http.post<any>(`${this.API_URL}/refresh`, { refreshToken }).pipe(
+            map(response => response.data as AuthResponse),
             tap(response => {
                 this.tokenService.saveTokens(response.accessToken, response.refreshToken);
             }),
@@ -97,7 +101,8 @@ export class AuthService {
     }
 
     getUserProfile(): Observable<User> {
-        return this.http.get<User>(`${this.API_URL}/me`).pipe(
+        return this.http.get<any>(`${this.API_URL}/me`).pipe(
+            map(response => response.data as User),
             tap(user => {
                 this.currentUserSubject.next(user);
                 this.isAuthenticatedSubject.next(true);

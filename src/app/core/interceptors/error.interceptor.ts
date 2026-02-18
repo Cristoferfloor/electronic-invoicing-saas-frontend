@@ -25,8 +25,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 );
             }
 
-            const errorMessage = error.error?.message || error.statusText || 'Ocurrió un error inesperado';
-            return throwError(() => new Error(errorMessage));
+            const errorResponse = error.error || { message: 'Ocurrió un error inesperado' };
+            return throwError(() => errorResponse);
         })
     );
 };
