@@ -18,6 +18,14 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/dashboard/pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
             },
             {
+                path: 'my-company',
+                loadChildren: () => import('./features/tenants/tenants.routes').then(m => m.TENANT_ROUTES)
+            },
+            {
+                path: 'users',
+                loadChildren: () => import('./features/users/users.routes').then(m => m.USER_ROUTES)
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

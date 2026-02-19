@@ -1,0 +1,54 @@
+<div class="user-list-container">
+    <div class="header-actions">
+        <h1>Gestión de Usuarios</h1>
+        <app-button (click)="openCreateModal()" variant="primary">
+            <span class="icon">+</span> Nuevo Usuario
+        </app-button>
+    </div>
+
+    <app-card>
+        <div class="filters">
+            <div class="search-box">
+                <input type="text" [(ngModel)]="search" (keyup.enter)="onSearch()"
+                    placeholder="Buscar por nombre, apellido o email..." class="form-control">
+                <app-button (click)="onSearch()" variant="secondary">Buscar</app-button>
+            </div>
+        </div>
+
+        <app-table [columns]="columns" [data]="users" [loading]="loading">
+            <!-- Custom templates for some columns -->
+            <ng-template let-row="row" columnTemplate="role">
+                <span class="badge" [class.badge-admin]="row.role === 'ADMIN'"
+                    [class.badge-user]="row.role !== 'ADMIN'">
+                    {{ row.role }}
+                </span>
+            </ng-template>
+
+            <ng-template let-row="row" columnTemplate="isActive">
+                <span class="status-indicator" [class.status-active]="row.isActive"
+                    [class.status-inactive]="!row.isActive">
+                    {{ row.isActive ? 'Activo' : 'Inactivo' }}
+                </span>
+            </ng-template>
+
+            <ng-template let-row="row" columnTemplate="actions">
+                <div class="table-actions">
+                    <button class="btn-icon btn-edit" (click)="openEditModal(row)" title="Editar">
+                        <i>✏️</i>
+                    </button>
+                    <button class="btn-icon" [class.btn-deactivate]="row.isActive" [class.btn-activate]="!row.isActive"
+                        (click)="toggleStatus(row)" [title]="row.isActive ? 'Desactivar' : 'Activar'">
+                        <i>{{ row.isActive ? '🚫' : '✅' }}</i>
+                    </button>
+                </div>
+            </ng-template>
+        </app-table>
+    </app-card>
+</div>
+
+<!-- Modal para Crear/Editar Usuario -->
+@if (showModal) {
+<app-modal [title]="selectedUser ? 'Editar Usuario' : 'Nuevo Usuario'" (close)="closeModal()">
+    <app-user-form [user]="selectedUser" (saved)="onUserSaved()" (cancel)="closeModal()"></app-user-form>
+</app-modal>
+}

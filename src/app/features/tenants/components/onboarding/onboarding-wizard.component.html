@@ -1,0 +1,110 @@
+<div class="onboarding-container">
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+        @for (step of steps; track step.title; let i = $index) {
+        <div class="step" [class.active]="currentStep === i + 1" [class.completed]="currentStep > i + 1">
+            <div class="step-icon">{{ step.icon }}</div>
+            <div class="step-title">{{ step.title }}</div>
+        </div>
+        @if (i < steps.length - 1) { <div class="step-line" [class.completed]="currentStep > i + 1">
+    </div>
+    }
+    }
+</div>
+
+<!-- Step 1: Confirmar datos de la empresa -->
+@if (currentStep === 1) {
+<app-card title="Paso 1: Datos de tu Empresa">
+    @if (tenantData) {
+    <div class="info-grid">
+        <div class="info-item">
+            <span class="info-label">Nombre Comercial</span>
+            <span class="info-value">{{ tenantData.commercialName }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Razón Social</span>
+            <span class="info-value">{{ tenantData.legalName }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">RUC</span>
+            <span class="info-value">{{ tenantData.taxId }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ tenantData.email }}</span>
+        </div>
+    </div>
+    } @else {
+    <div class="loading-state">Cargando información...</div>
+    }
+    <div class="step-actions">
+        <app-button variant="primary" (btnClick)="nextStep()">
+            Continuar →
+        </app-button>
+    </div>
+</app-card>
+}
+
+<!-- Step 2: Configurar facturación -->
+@if (currentStep === 2) {
+<app-card title="Paso 2: Configuración de Facturación SRI">
+    <form [formGroup]="billingForm" (ngSubmit)="saveBillingConfig()">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="establishment">Código de Establecimiento *</label>
+                <input id="establishment" type="text" formControlName="establishment" class="form-control"
+                    placeholder="001" maxlength="3">
+                <small>Siempre 3 dígitos. Usualmente: 001</small>
+            </div>
+            <div class="form-group">
+                <label for="emissionPoint">Punto de Emisión *</label>
+                <input id="emissionPoint" type="text" formControlName="emissionPoint" class="form-control"
+                    placeholder="001" maxlength="3">
+                <small>Siempre 3 dígitos. Usualmente: 001</small>
+            </div>
+            <div class="form-group full-width">
+                <label for="environment">Ambiente de Emisión *</label>
+                <select id="environment" formControlName="environment" class="form-control">
+                    <option value="TEST">PRUEBAS (Recomendado para empezar)</option>
+                    <option value="PRODUCTION">PRODUCCIÓN</option>
+                </select>
+            </div>
+        </div>
+        <div class="step-actions">
+            <app-button type="button" variant="secondary" (btnClick)="prevStep()">← Atrás</app-button>
+            <app-button type="submit" variant="primary" [loading]="loading" [disabled]="billingForm.invalid">
+                Guardar y Continuar →
+            </app-button>
+        </div>
+    </form>
+</app-card>
+}
+
+<!-- Step 3: Bienvenida -->
+@if (currentStep === 3) {
+<app-card>
+    <div class="welcome-screen">
+        <div class="welcome-icon">🎉</div>
+        <h2>¡Todo está listo!</h2>
+        <p>Tu empresa ha sido configurada correctamente. Ya puedes comenzar a emitir facturas electrónicas.</p>
+        <div class="quick-links">
+            <div class="quick-link">
+                <span>📄</span>
+                <span>Emitir Facturas</span>
+            </div>
+            <div class="quick-link">
+                <span>👥</span>
+                <span>Gestionar Usuarios</span>
+            </div>
+            <div class="quick-link">
+                <span>🏪</span>
+                <span>Agregar Clientes</span>
+            </div>
+        </div>
+        <app-button variant="primary" (btnClick)="goToDashboard()">
+            Ir al Dashboard →
+        </app-button>
+    </div>
+</app-card>
+}
+</div>

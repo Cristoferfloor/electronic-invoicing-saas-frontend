@@ -1,0 +1,83 @@
+<div class="settings-container">
+    <h1>Configuración de la Empresa</h1>
+
+    @if (successMsg) {
+    <app-alert variant="success">{{ successMsg }}</app-alert>
+    }
+    @if (errorMsg) {
+    <app-alert variant="error">{{ errorMsg }}</app-alert>
+    }
+
+    <div class="settings-grid">
+        <!-- Información General -->
+        <app-card title="Información General">
+            <form [formGroup]="tenantForm" (ngSubmit)="saveGeneralData()">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nombre Comercial</label>
+                        <input type="text" formControlName="commercialName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Razón Social</label>
+                        <input type="text" formControlName="legalName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>RUC (No editable)</label>
+                        <input type="text" formControlName="taxId" class="form-control disabled">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" formControlName="email" class="form-control">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Dirección Matriz</label>
+                        <input type="text" formControlName="address" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" formControlName="phone" class="form-control">
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <app-button type="submit" [loading]="loading" [disabled]="tenantForm.invalid">
+                        Guardar Cambios
+                    </app-button>
+                </div>
+            </form>
+        </app-card>
+
+        <!-- Configuración SRI -->
+        <app-card title="Configuración de Facturación (SRI)">
+            <form [formGroup]="billingForm" (ngSubmit)="saveBillingConfig()">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Establecimiento (Cod.)</label>
+                        <input type="text" formControlName="establishment" class="form-control" placeholder="001"
+                            maxlength="3">
+                        <small>Ej: 001. Siempre 3 dígitos.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Punto de Emisión (Cod.)</label>
+                        <input type="text" formControlName="emissionPoint" class="form-control" placeholder="001"
+                            maxlength="3">
+                        <small>Ej: 001. Siempre 3 dígitos.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Ambiente de Emisión</label>
+                        <select formControlName="environment" class="form-control">
+                            <option value="TEST">PRUEBAS</option>
+                            <option value="PRODUCTION">PRODUCCIÓN</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <app-button type="submit" [loading]="loading" [disabled]="billingForm.invalid" variant="primary">
+                        Actualizar Configuración
+                    </app-button>
+                </div>
+            </form>
+        </app-card>
+    </div>
+</div>
