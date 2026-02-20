@@ -55,14 +55,28 @@ export class TenantSettingsComponent implements OnInit {
         this.tenantService.getMyTenant().subscribe({
             next: (tenant) => {
                 this.tenantData = tenant;
-                this.tenantForm.patchValue(tenant);
-                if (tenant.configuration) {
-                    this.billingForm.patchValue(tenant.configuration);
+                this.tenantForm.patchValue({
+                    commercialName: tenant.commercialName,
+                    legalName: tenant.legalName,
+                    taxId: tenant.taxId,
+                    address: tenant.address,
+                    phone: tenant.phone,
+                    email: tenant.email
+                });
+                
+                // ← CORREGIDO: Manejar billingConfiguration vs configuration
+                const billingConfig = tenant.billingConfiguration || tenant.configuration;
+                if (billingConfig) {
+                    this.billingForm.patchValue({
+                        establishment: billingConfig.establishment,
+                        emissionPoint: billingConfig.emissionPoint,
+                        environment: billingConfig.environment
+                    });
                 }
                 this.loading = false;
             },
-            error: () => {
-                this.errorMsg = 'Error al cargar datos de la empresa';
+            error: (err) => {
+                this.errorMsg = err.error?.message || 'Error al cargar datos de la empresa';
                 this.loading = false;
             }
         });

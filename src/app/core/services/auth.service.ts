@@ -32,11 +32,11 @@ export class AuthService {
     }
 
     private checkInitialAuth(): void {
+        // Si hay token válido en localStorage, restaurar la sesión
         if (this.tokenService.hasToken()) {
             this.isAuthenticatedSubject.next(true);
-            this.getUserProfile().subscribe({
-                error: () => this.clearLocalSession()
-            });
+            // NO hacer petición al servidor, solo confiar en el token
+            // El token fue guardado correctamente al hacer login
         }
     }
 

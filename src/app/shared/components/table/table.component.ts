@@ -13,7 +13,7 @@ export class TableColumnDirective {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [TableColumnDirective, NgTemplateOutlet],
+  imports: [ NgTemplateOutlet],
   template: `
     <div class="table-container">
       @if (loading) {

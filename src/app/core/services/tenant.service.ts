@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
     providedIn: 'root'
 })
 export class TenantService {
-    private apiUrl = `${environment.apiUrl}/api/tenant`;
+    private apiUrl = `${environment.apiUrl}/tenant`;
 
     constructor(private http: HttpClient) { }
 
@@ -25,14 +25,18 @@ export class TenantService {
      * Actualizar datos básicos de la empresa
      */
     updateTenant(data: any): Observable<any> {
-        return this.http.put<any>(this.apiUrl, data);
+        return this.http.put<any>(this.apiUrl, data).pipe(
+            map(res => res.data || res)  // ← Maneja ambos formatos
+        );
     }
 
     /**
      * Actualizar configuración de facturación (SRI)
      */
     updateBillingConfig(data: any): Observable<any> {
-        return this.http.put<any>(`${this.apiUrl}/billing-config`, data);
+        return this.http.put<any>(`${this.apiUrl}/billing-config`, data).pipe(
+            map(res => res.data || res)  // ← Maneja ambos formatos
+        );
     }
 
     /**

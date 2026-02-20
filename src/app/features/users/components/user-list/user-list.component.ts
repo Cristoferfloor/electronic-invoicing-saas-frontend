@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../../core/services/user.service';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -19,16 +19,19 @@ import { FormsModule } from '@angular/forms';
         ButtonComponent,
         ModalComponent,
         UserFormComponent,
-        FormsModule
+        FormsModule,
+        AlertComponent  // ← AÑADIDO
     ],
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
     private userService = inject(UserService);
+    private cdr = inject(ChangeDetectorRef);  // ← AÑADIDO
 
     users: any[] = [];
     loading = false;
+    error: string | null = null;
     total = 0;
     page = 1;
     limit = 10;
@@ -52,18 +55,24 @@ export class UserListComponent implements OnInit {
 
     loadUsers(): void {
         this.loading = true;
+        this.error = null;
         this.userService.getUsers({
             page: this.page,
             limit: this.limit,
             search: this.search
         }).subscribe({
             next: (data) => {
-                this.users = data.users;
-                this.total = data.total;
+                console.log('✅ Usuarios cargados:', data);  // DEBUG
+                this.users = data.users || [];
+                this.total = data.total || 0;
                 this.loading = false;
+                this.cdr.markForCheck();  // ← FUERZA detección de cambios
             },
-            error: () => {
+            error: (err) => {
+                console.error('❌ Error cargando usuarios:', err);  // DEBUG
                 this.loading = false;
+                this.error = err.error?.message || err.message || 'Error al cargar usuarios';
+                this.cdr.markForCheck();  // ← FUERZA detección de cambios
             }
         });
     }

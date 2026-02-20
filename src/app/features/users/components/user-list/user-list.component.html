@@ -6,11 +6,19 @@
         </app-button>
     </div>
 
+    <!-- Alert de error -->
+    @if (error) {
+    <app-alert type="error" [message]="error"></app-alert>
+    }
+
     <app-card>
         <div class="filters">
             <div class="search-box">
-                <input type="text" [(ngModel)]="search" (keyup.enter)="onSearch()"
-                    placeholder="Buscar por nombre, apellido o email..." class="form-control">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" [(ngModel)]="search" (keyup.enter)="onSearch()"
+                        placeholder="Buscar por nombre, apellido o email..." class="form-control search-input">
+                </div>
                 <app-button (click)="onSearch()" variant="secondary">Buscar</app-button>
             </div>
         </div>
@@ -20,7 +28,7 @@
             <ng-template let-row="row" columnTemplate="role">
                 <span class="badge" [class.badge-admin]="row.role === 'ADMIN'"
                     [class.badge-user]="row.role !== 'ADMIN'">
-                    {{ row.role }}
+                    {{ row.role === 'ADMIN' ? 'Administrador' : 'Usuario' }}
                 </span>
             </ng-template>
 
@@ -33,12 +41,12 @@
 
             <ng-template let-row="row" columnTemplate="actions">
                 <div class="table-actions">
-                    <button class="btn-icon btn-edit" (click)="openEditModal(row)" title="Editar">
-                        <i>✏️</i>
+                    <button class="btn-icon btn-edit" (click)="openEditModal(row)" title="Editar usuario">
+                        <span class="icon-edit">✎</span>
                     </button>
                     <button class="btn-icon" [class.btn-deactivate]="row.isActive" [class.btn-activate]="!row.isActive"
-                        (click)="toggleStatus(row)" [title]="row.isActive ? 'Desactivar' : 'Activar'">
-                        <i>{{ row.isActive ? '🚫' : '✅' }}</i>
+                        (click)="toggleStatus(row)" [title]="row.isActive ? 'Desactivar usuario' : 'Activar usuario'">
+                        <span class="icon-status">{{ row.isActive ? '⊘' : '◉' }}</span>
                     </button>
                 </div>
             </ng-template>
